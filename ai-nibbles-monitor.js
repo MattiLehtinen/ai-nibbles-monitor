@@ -3,11 +3,33 @@ var socket = io("http://localhost:3000/");
 var snakeA = [];
 var snakeB = [];
 
-var squareSize = 20;
+var squareSize = 5;
+var gameDiv = d3.select("#game");
+var levelG = null;
+var snakeAG = null;
+var snakeBG = null;
+var map = null;
 
 socket.on('connect', function () {
     console.log("Connection");
     socket.emit('stream_latest');
+
+    socket.on('start', function(data) {
+        console.log("start");
+        console.log(data);
+        var level = data.level;
+        map = level.map;
+
+        var mainSvg = gameDiv.append("svg")
+            .attr("id", "gameSvg")
+            .attr("width", level.width * squareSize)
+            .attr("height", level.height * squareSize);
+        levelG = mainSvg.append("g").attr("id", "level");
+        snakeAG = mainSvg.append("g").attr("id", "snakeA");
+        snakeBG = mainSvg.append("g").attr("id", "snakeB");
+        refresh();
+    });
+
     socket.on('positions', function (snakes) {
         console.log(snakes);
         snakeA = snakes[0].body;
@@ -17,8 +39,8 @@ socket.on('connect', function () {
 
 });
 
-
-var data = [
+/*
+var map = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,1,0,0,0,0,0,0,0,0],
     [0,1,0,0,0,0,0,0,0,0],
@@ -30,16 +52,17 @@ var data = [
     [0,1,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
 ];
-//snakeA = [[5,0],[6,0],[6,1],[6,2],[7,2]];
-snakeA = [[5,0]];
-refresh();
+snakeB = [[5,0],[6,0],[6,1],[6,2],[7,2]];
+snakeA = [[50,50]];
+*/
+
+
 
 function refresh() {
 
-    var svg = d3.select("#gameSvg");
 
-    var rowG = svg.selectAll("g")
-        .data(data);
+    var rowG = levelG.selectAll("g")
+        .data(map);
 
     var gameLevelRect = rowG.enter()
         .append("g")
@@ -65,18 +88,17 @@ function refresh() {
 }
 
 function refreshSnakes() {
-    var svg = d3.select("#gameSvg");
-    refreshSnake("snakeA", snakeA, "rgb(255,0,0)", svg);
-    refreshSnake("snakeB", snakeB, "rgb(0,255,0)", svg);
+    refreshSnake("snakeA", snakeA, "rgb(255,0,0)", snakeAG);
+    refreshSnake("snakeB", snakeB, "rgb(0,255,0)", snakeBG);
 }
 
-function refreshSnake(snakeClass, snake, colorFill, svg) {
-    var rect = svg.selectAll("." + snakeClass)
+function refreshSnake(snakeClass, snake, colorFill, element) {
+    var rect = element.selectAll("." + snakeClass)
         .data(snake);
 
     // UPDATE
     rect.attr("x", function(d) { return d[0]*squareSize;})
-        .attr("y", function(d) { return d[1]*squareSize;})
+        .attr("y", function(d) { return d[1]*squareSize;});
 
     // ENTER
     rect.enter()
