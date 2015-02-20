@@ -1,10 +1,10 @@
 {
-  "name": "ai-nibbles-monitor",
+  "name": "ai-nibbles-viewer",
   "version": "0.0.1",
   "authors": [
     "Matti Lehtinen"
   ],
-  "description": "UI to monitor AI nibbles games",
+  "description": "UI to view AI nibbles games",
   "main": "index.html",
   "license": "MIT",
   "ignore": [

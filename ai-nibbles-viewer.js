@@ -34,7 +34,6 @@ socket.on('connect', function () {
     });
 
     socket.on('positions', function (snakes) {
-        console.log(snakes);
         snakeA = snakes[0].body;
         snakeB = snakes[1].body;
         refreshSnakes();
@@ -53,25 +52,6 @@ socket.on('connect', function () {
     })
 
 });
-
-/*
-var map = [
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
-];
-snakeB = [[5,0],[6,0],[6,1],[6,2],[7,2]];
-snakeA = [[50,50]];
-*/
-
-
 
 function refresh() {
 
