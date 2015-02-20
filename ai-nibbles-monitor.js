@@ -9,25 +9,28 @@ var levelG = null;
 var snakeAG = null;
 var snakeBG = null;
 var map = null;
+var players = null;
+
+var mainSvg = gameDiv.append("svg")
+    .attr("id", "gameSvg");
+levelG = mainSvg.append("g").attr("id", "level");
+snakeAG = mainSvg.append("g").attr("id", "snakeA");
+snakeBG = mainSvg.append("g").attr("id", "snakeB");
 
 socket.on('connect', function () {
     console.log("Connection");
     socket.emit('stream_latest');
 
     socket.on('start', function(data) {
-        console.log("start");
+        players = data.players;
+        console.log("Start. Players 1: " + players[0] + ' Player 2: ' + players[1]);
         console.log(data);
         var level = data.level;
         map = level.map;
-
-        var mainSvg = gameDiv.append("svg")
-            .attr("id", "gameSvg")
+        mainSvg
             .attr("width", level.width * squareSize)
             .attr("height", level.height * squareSize);
-        levelG = mainSvg.append("g").attr("id", "level");
-        snakeAG = mainSvg.append("g").attr("id", "snakeA");
-        snakeBG = mainSvg.append("g").attr("id", "snakeB");
-        refresh();
+        refresh(level);
     });
 
     socket.on('positions', function (snakes) {
@@ -35,7 +38,19 @@ socket.on('connect', function () {
         snakeA = snakes[0].body;
         snakeB = snakes[1].body;
         refreshSnakes();
+
+        if(!snakes[0].alive) {
+            console.log(players[1].name + " won! (Player 2)");
+        } else if(!snakes[1].alive) {
+            console.log(players[0].name + " won! (Player 1)");
+        } else if(!snakes[0].alive && !snakes[1].alive) {
+            console.log("TIE.");
+        }
     });
+
+    socket.on('end', function() {
+        console.log("END");
+    })
 
 });
 
