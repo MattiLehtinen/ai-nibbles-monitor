@@ -14,6 +14,7 @@ var players = null;
 var mainSvg = gameDiv.append("svg")
     .attr("id", "gameSvg");
 levelG = mainSvg.append("g").attr("id", "level");
+appleG = mainSvg.append("g").attr("id", "apple");
 snakeAG = mainSvg.append("g").attr("id", "snakeA");
 snakeBG = mainSvg.append("g").attr("id", "snakeB");
 
@@ -45,6 +46,11 @@ socket.on('connect', function () {
         } else if(!snakes[0].alive && !snakes[1].alive) {
             console.log("TIE.");
         }
+    });
+
+    socket.on('apple', function(apple) {
+        console.log("Apple: " + apple);
+        refreshApple(apple);
     });
 
     socket.on('end', function() {
@@ -107,4 +113,28 @@ function refreshSnake(snakeClass, snake, colorFill, element) {
 
     // EXIT
     rect.exit().remove();
+}
+
+function refreshApple(apple) {
+    var element = appleG;
+    var appleClass = "apple";
+    var appleRadius = squareSize/2.0;
+    var circle = element.selectAll("." + appleClass)
+        .data([0]);
+
+    // UPDATE
+    circle.attr("cx", apple[0]*squareSize + appleRadius)
+          .attr("cy", apple[1]*squareSize + appleRadius);
+
+    // ENTER
+    circle.enter()
+        .append("circle")
+        .attr("class", appleClass)
+        .attr("cx", apple[0]*squareSize + appleRadius)
+        .attr("cy", apple[1]*squareSize + appleRadius)
+        .attr("r", appleRadius)
+        .attr("fill", "red");
+
+    // EXIT
+    circle.exit().remove();
 }
