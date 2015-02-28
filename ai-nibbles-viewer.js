@@ -20,11 +20,14 @@ snakeBG = mainSvg.append("g").attr("id", "snakeB");
 
 socket.on('connect', function () {
     console.log("Connection");
-    socket.emit('stream_latest');
 
     socket.on('start', function(data) {
         players = data.players;
-        console.log("Start. Players 1: " + players[0] + ' Player 2: ' + players[1]);
+        console.log("Start. Players 1: " + players[0].name + ' Player 2: ' + players[1].name);
+        d3.select("#player1Name").text(players[0].name);
+        d3.select("#player2Name").text(players[1].name);
+        d3.select("#player1Winner").style("visibility", "hidden");
+        d3.select("#player2Winner").style("visibility", "hidden");
         console.log(data);
         var level = data.level;
         map = level.map;
@@ -41,8 +44,10 @@ socket.on('connect', function () {
 
         if(!snakes[0].alive) {
             console.log(players[1].name + " won! (Player 2)");
+            d3.select("#player2Winner").style("visibility", "visible");
         } else if(!snakes[1].alive) {
             console.log(players[0].name + " won! (Player 1)");
+            d3.select("#player1Winner").style("visibility", "visible");
         } else if(!snakes[0].alive && !snakes[1].alive) {
             console.log("TIE.");
         }
@@ -89,8 +94,8 @@ function refresh() {
 }
 
 function refreshSnakes() {
-    refreshSnake("snakeA", snakeA, "rgb(255,0,0)", snakeAG);
-    refreshSnake("snakeB", snakeB, "rgb(0,255,0)", snakeBG);
+    refreshSnake("snakeA", snakeA, "rgb(255,255,0)", snakeAG);
+    refreshSnake("snakeB", snakeB, "rgb(0,255,255)", snakeBG);
 }
 
 function refreshSnake(snakeClass, snake, colorFill, element) {
