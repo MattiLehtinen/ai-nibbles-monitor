@@ -1,2 +1,2 @@
-AI-Nibbles Viewer
+AI-Nibbles Monitor
 ==================

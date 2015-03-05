@@ -1,10 +1,10 @@
 {
-  "name": "ai-nibbles-viewer",
-  "version": "0.0.1",
+  "name": "ai-nibbles-monitor",
+  "version": "0.1.0",
   "authors": [
     "Matti Lehtinen"
   ],
-  "description": "UI to view AI nibbles games",
+  "description": "UI to view AI-nibbles games",
   "main": "index.html",
   "license": "MIT",
   "ignore": [
@@ -17,5 +17,9 @@
   "dependencies": {
     "d3": "~3.5.5",
     "socket.io-client": "~1.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MattiLehtinen/ai-nibbles-monitor.git"
   }
 }
