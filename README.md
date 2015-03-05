@@ -1,5 +1,7 @@
-AI-Nibbles Monitor
+AI Nibbles Monitor
 ==================
+
+A web based UI to watch games of [AI Nibbles server](https://github.com/MattiLehtinen/ai-nibbles-server)
 
 Installation
 ------------
