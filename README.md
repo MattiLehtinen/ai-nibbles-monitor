@@ -14,6 +14,7 @@ Installation
 ------------
 
     git clone https://github.com/MattiLehtinen/ai-nibbles-monitor.git
+    cd ai-nibbles-monitor
     bower install
     
 Running
