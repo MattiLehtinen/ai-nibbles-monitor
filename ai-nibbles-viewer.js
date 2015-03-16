@@ -1,23 +1,20 @@
-var socket = io("http://localhost:3000/");
+// Configuration
+var host = "http://localhost:3000/";
+var squareSize = 5;
 
+// Globals
 var snakeA = [];
 var snakeB = [];
-
-var squareSize = 5;
-var gameDiv = d3.select("#game");
-var levelG = null;
-var snakeAG = null;
-var snakeBG = null;
-var map = null;
 var players = null;
 
-var mainSvg = gameDiv.append("svg")
-    .attr("id", "gameSvg");
-levelG = mainSvg.append("g").attr("id", "level");
-appleG = mainSvg.append("g").attr("id", "apple");
-snakeAG = mainSvg.append("g").attr("id", "snakeA");
-snakeBG = mainSvg.append("g").attr("id", "snakeB");
+var gameDiv = d3.select("#game");
+var mainSvg = gameDiv.append("svg").attr("id", "gameSvg");
+var levelG = mainSvg.append("g").attr("id", "level");
+var appleG = mainSvg.append("g").attr("id", "apple");
+var snakeAG = mainSvg.append("g").attr("id", "snakeA");
+var snakeBG = mainSvg.append("g").attr("id", "snakeB");
 
+var socket = io(host);
 socket.on('connect', function () {
     console.log("Connection");
 
@@ -30,11 +27,7 @@ socket.on('connect', function () {
         d3.select("#player2Winner").style("visibility", "hidden");
         console.log(data);
         var level = data.level;
-        map = level.map;
-        mainSvg
-            .attr("width", level.width * squareSize)
-            .attr("height", level.height * squareSize);
-        refresh(level);
+        refreshLevel(level);
     });
 
     socket.on('positions', function (snakes) {
@@ -64,9 +57,16 @@ socket.on('connect', function () {
 
 });
 
-function refresh() {
+/**
+ * Refresh level
+ * @param level {Object}    Level data
+ */
+function refreshLevel(level) {
 
+    mainSvg.attr("width", level.width * squareSize)
+           .attr("height", level.height * squareSize);
 
+    var map = level.map;
     var rowG = levelG.selectAll("g")
         .data(map);
 
@@ -89,37 +89,55 @@ function refresh() {
         gameLevelRect.exit().remove();
 
     rowG.exit().remove();
-
-    refreshSnakes();
 }
 
+/**
+ * Refresh snake DIV elements
+ */
 function refreshSnakes() {
     refreshSnake("snakeA", snakeA, "rgb(255,255,0)", snakeAG);
     refreshSnake("snakeB", snakeB, "rgb(0,255,255)", snakeBG);
 }
 
+/**
+ * Refresh specified snake DOM elements
+ * @param snakeClass {String}   Name of the CSS class which is used for the DOM elements of specified snake
+ * @param snake {Object}        Snake data
+ * @param colorFill {String}    CSS color fill value of the snake. E.g. "rgb(255,255,0)"
+ * @param element {Object}      Parent DIV element where to add snake DIV elements
+ */
 function refreshSnake(snakeClass, snake, colorFill, element) {
+
+    var refreshCommonSnakeAttr = function(elem) {
+        elem.attr("x", function(d) { return d[0]*squareSize;})
+            .attr("y", function(d) { return d[1]*squareSize;});
+    };
+
     var rect = element.selectAll("." + snakeClass)
         .data(snake);
 
-    // UPDATE
-    rect.attr("x", function(d) { return d[0]*squareSize;})
-        .attr("y", function(d) { return d[1]*squareSize;});
+    // Update
+    refreshCommonSnakeAttr(rect);
 
-    // ENTER
-    rect.enter()
+    // Enter
+    var enterRect = rect.enter()
         .append("rect")
         .attr("class", snakeClass)
-        .attr("x", function(d) { return d[0]*squareSize;})
-        .attr("y", function(d) { return d[1]*squareSize;})
         .attr("width", squareSize)
         .attr("height", squareSize)
         .attr("style", "fill:" + colorFill + ";");
+    refreshCommonSnakeAttr(enterRect);
 
-    // EXIT
+
+
+    // Exit
     rect.exit().remove();
 }
 
+/**
+ * Refresh apple DOM elements
+ * @param apple {Object}    Apple data
+ */
 function refreshApple(apple) {
     var element = appleG;
     var appleClass = "apple";
@@ -127,18 +145,21 @@ function refreshApple(apple) {
     var circle = element.selectAll("." + appleClass)
         .data([0]);
 
+    var refreshCommonAppleAttr = function(elem) {
+        elem.attr("cx", apple[0]*squareSize + appleRadius)
+            .attr("cy", apple[1]*squareSize + appleRadius);
+    };
+
     // UPDATE
-    circle.attr("cx", apple[0]*squareSize + appleRadius)
-          .attr("cy", apple[1]*squareSize + appleRadius);
+    refreshCommonAppleAttr(circle);
 
     // ENTER
-    circle.enter()
+    var enterCircle = circle.enter()
         .append("circle")
         .attr("class", appleClass)
-        .attr("cx", apple[0]*squareSize + appleRadius)
-        .attr("cy", apple[1]*squareSize + appleRadius)
         .attr("r", appleRadius)
         .attr("fill", "red");
+    refreshCommonAppleAttr(enterCircle);
 
     // EXIT
     circle.exit().remove();
