@@ -3,8 +3,6 @@ var host = "http://localhost:3000/";
 var squareSize = 5;
 
 // Globals
-var snakeA = [];
-var snakeB = [];
 var players = null;
 
 var gameDiv = d3.select("#game");
@@ -31,9 +29,7 @@ socket.on('connect', function () {
     });
 
     socket.on('positions', function (snakes) {
-        snakeA = snakes[0].body;
-        snakeB = snakes[1].body;
-        refreshSnakes();
+        refreshSnakes(snakes);
 
         if(!snakes[0].alive && !snakes[1].alive)  {
             console.log("TIE.");
@@ -96,9 +92,9 @@ function refreshLevel(level) {
 /**
  * Refresh snake DIV elements
  */
-function refreshSnakes() {
-    refreshSnake("snakeA", snakeA, "rgb(255,255,0)", snakeAG);
-    refreshSnake("snakeB", snakeB, "rgb(0,255,255)", snakeBG);
+function refreshSnakes(snakes) {
+    refreshSnake("snakeA", snakes[0].body, "rgb(255,255,0)", snakeAG);
+    refreshSnake("snakeB", snakes[1].body, "rgb(0,255,255)", snakeBG);
 }
 
 /**
