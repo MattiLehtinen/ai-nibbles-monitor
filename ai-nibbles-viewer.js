@@ -23,8 +23,8 @@ socket.on('connect', function () {
         console.log("Start. Players 1: " + players[0].name + ' Player 2: ' + players[1].name);
         d3.select("#player1Name").text(players[0].name);
         d3.select("#player2Name").text(players[1].name);
-        d3.select("#player1Winner").style("visibility", "hidden");
-        d3.select("#player2Winner").style("visibility", "hidden");
+        d3.select("#player1Winner").classed("hidden", true);
+        d3.select("#player2Winner").classed("hidden", true);
         console.log(data);
         var level = data.level;
         refreshLevel(level);
@@ -35,15 +35,17 @@ socket.on('connect', function () {
         snakeB = snakes[1].body;
         refreshSnakes();
 
-        if(!snakes[0].alive) {
+        if(!snakes[0].alive && !snakes[1].alive)  {
+            console.log("TIE.");
+            d3.select("#player1Winner").classed("hidden", false).text("TIE!");
+            d3.select("#player2Winner").classed("hidden", false).text("TIE!");
+        } else if(!snakes[0].alive) {
             console.log(players[1].name + " won! (Player 2)");
-            d3.select("#player2Winner").style("visibility", "visible");
+            d3.select("#player2Winner").text("WINNER!").classed("hidden", false);
         } else if(!snakes[1].alive) {
             console.log(players[0].name + " won! (Player 1)");
-            d3.select("#player1Winner").style("visibility", "visible");
-        } else if(!snakes[0].alive && !snakes[1].alive) {
-            console.log("TIE.");
-        }
+            d3.select("#player1Winner").text("WINNER!").classed("hidden", false);
+        } 
     });
 
     socket.on('apple', function(apple) {
