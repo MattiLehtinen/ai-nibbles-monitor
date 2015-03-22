@@ -19,9 +19,17 @@ body {
 	min-height: 800px;
 }
 
-.playerInfo {
-	float: left;
-	margin-right: 20px;
+.playerName {
+	display: inline-block;
+	width: 180px;
+}
+
+.playerWinner {
+	display: inline-block;
+	width: 70px;
+}
+
+.playerLengthCaption {
 }
 
 .player1Color {
@@ -44,5 +52,5 @@ body {
 }
 
 .hidden {
-	display: none;
+	visibility: hidden;
 }

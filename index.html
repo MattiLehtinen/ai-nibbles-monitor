@@ -10,14 +10,26 @@
 
 <body>
     <div>
-        AI NIBBLES<br/>
-        <div class="playerInfo">
-            <span class="player1Color">&nbsp;</span> PLAYER 1:<span id="player1Name">-</span>
-            <span id="player1Winner" class="hidden"></span>
+        <div id="gameInfo">
+            <span id="gameTitle">AI NIBBLES</span>
+        </div>
+        <div id="timeLeftInfo">
+            <span id="timeLeftCaption">Time left:</span>
+            <span id="timeLeft"></span>
         </div>
         <div class="playerInfo">
-            <span class="player2Color">&nbsp;</span> PLAYER 2:<span id="player2Name">-</span>
-            <span id="player2Winner" class="hidden"></span>
+            <span class="player1Color">&nbsp;</span>
+            PLAYER 1:<span id="player1Name" class="playerName">-</span>
+            <span id="player1Winner" class="playerWinner hidden"></span>
+            <span class="playerLengthCaption">Length:</span>
+            <span id="playerLength0" class="playerLength"></span>
+        </div>
+        <div class="playerInfo">
+            <span class="player2Color">&nbsp;</span>
+            PLAYER 2:<span id="player2Name" class="playerName">-</span>
+            <span id="player2Winner" class="playerWinner hidden"></span>
+            <span class="playerLengthCaption">Length:</span>
+            <span id="playerLength1" class="playerLength"></span>
         </div>
     </div>
 

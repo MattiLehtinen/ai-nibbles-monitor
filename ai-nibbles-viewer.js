@@ -11,6 +11,7 @@ var levelG = mainSvg.append("g").attr("id", "level");
 var appleG = mainSvg.append("g").attr("id", "apple");
 var snakeAG = mainSvg.append("g").attr("id", "snakeA");
 var snakeBG = mainSvg.append("g").attr("id", "snakeB");
+var timeSpan = d3.select("#timeLeft");
 
 var socket = io(host);
 socket.on('connect', function () {
@@ -28,20 +29,10 @@ socket.on('connect', function () {
         refreshLevel(level);
     });
 
-    socket.on('positions', function (snakes) {
-        refreshSnakes(snakes);
-
-        if(!snakes[0].alive && !snakes[1].alive)  {
-            console.log("TIE.");
-            d3.select("#player1Winner").classed("hidden", false).text("TIE!");
-            d3.select("#player2Winner").classed("hidden", false).text("TIE!");
-        } else if(!snakes[0].alive) {
-            console.log(players[1].name + " won! (Player 2)");
-            d3.select("#player2Winner").text("WINNER!").classed("hidden", false);
-        } else if(!snakes[1].alive) {
-            console.log(players[0].name + " won! (Player 1)");
-            d3.select("#player1Winner").text("WINNER!").classed("hidden", false);
-        } 
+    socket.on('positions', function (data) {
+        refreshSnakes(data.snakes);
+        refreshLengths(data.snakes);
+        refreshTime(data.timeLeft);
     });
 
     socket.on('apple', function(apple) {
@@ -49,8 +40,22 @@ socket.on('connect', function () {
         refreshApple(apple);
     });
 
-    socket.on('end', function() {
+    socket.on('end', function(data) {
         console.log("END");
+        console.log(data);
+
+        var winners = data.winners;
+        if(winners.length > 1)  {
+            console.log("TIE.");
+            d3.select("#player1Winner").classed("hidden", false).text("TIE!");
+            d3.select("#player2Winner").classed("hidden", false).text("TIE!");
+        } else if(winners[0] == 1) {
+            console.log(players[1].name + " won! (Player 2)");
+            d3.select("#player2Winner").text("WINNER!").classed("hidden", false);
+        } else if(winners[0] == 0) {
+            console.log(players[0].name + " won! (Player 1)");
+            d3.select("#player1Winner").text("WINNER!").classed("hidden", false);
+        }
     })
 
 });
@@ -126,10 +131,23 @@ function refreshSnake(snakeClass, snake, colorFill, element) {
         .attr("style", "fill:" + colorFill + ";");
     refreshCommonSnakeAttr(enterRect);
 
-
-
     // Exit
     rect.exit().remove();
+}
+
+/**
+ * Refreshes time left
+ * @param timeLeft  Amount of time left
+ */
+function refreshTime(timeLeft) {
+    var seconds = Math.ceil(timeLeft / 1000);
+    timeSpan.text(seconds);
+}
+
+function refreshLengths(snakes) {
+    for(i=0; i<snakes.length; i++) {
+        d3.select("#playerLength" + i).text(snakes[i].growLength);
+    }
 }
 
 /**
