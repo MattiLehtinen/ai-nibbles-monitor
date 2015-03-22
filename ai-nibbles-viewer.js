@@ -35,15 +35,15 @@ socket.on('connect', function () {
         snakeB = snakes[1].body;
         refreshSnakes();
 
-        if(!snakes[0].alive) {
+        if(!snakes[0].alive && !snakes[1].alive)  {
+            console.log("TIE.");
+        } else if(!snakes[0].alive) {
             console.log(players[1].name + " won! (Player 2)");
             d3.select("#player2Winner").style("visibility", "visible");
         } else if(!snakes[1].alive) {
             console.log(players[0].name + " won! (Player 1)");
             d3.select("#player1Winner").style("visibility", "visible");
-        } else if(!snakes[0].alive && !snakes[1].alive) {
-            console.log("TIE.");
-        }
+        } 
     });
 
     socket.on('apple', function(apple) {
