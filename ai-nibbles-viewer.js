@@ -24,6 +24,7 @@ socket.on('connect', function () {
         d3.select("#player2Name").text(players[1].name);
         d3.select("#player1Winner").classed("hidden", true);
         d3.select("#player2Winner").classed("hidden", true);
+        d3.select("#outOfTimeCaption").classed("hidden", true);
         console.log(data);
         var level = data.level;
         refreshLevel(level);
@@ -141,6 +142,9 @@ function refreshSnake(snakeClass, snake, colorFill, element) {
  */
 function refreshTime(timeLeft) {
     var seconds = Math.ceil(timeLeft / 1000);
+    if(seconds == 0) {
+        d3.select("#outOfTimeCaption").classed("hidden", false);
+    }
     timeSpan.text(seconds);
 }
 

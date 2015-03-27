@@ -19,6 +19,15 @@ body {
 	min-height: 800px;
 }
 
+#timeLeft {
+	display: inline-block;
+	width: 178px;
+}
+
+#outOfTimeCaption {
+	color: rgb(255,0,0);
+}
+
 .playerName {
 	display: inline-block;
 	width: 180px;
@@ -27,9 +36,6 @@ body {
 .playerWinner {
 	display: inline-block;
 	width: 70px;
-}
-
-.playerLengthCaption {
 }
 
 .player1Color {
