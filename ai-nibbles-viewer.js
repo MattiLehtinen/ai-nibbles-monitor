@@ -71,28 +71,29 @@ function refreshLevel(level) {
            .attr("height", level.height * squareSize);
 
     var map = level.map;
-    var rowG = levelG.selectAll("g")
-        .data(map);
+    // Always re-create the whole level because it isn't done often and it's the simplest way.
+    d3.selectAll(".gameRow").remove();
 
-    var gameLevelRect = rowG.enter()
+    var rowG = levelG.selectAll(".gameRow")
+        .data(map)
+        .enter()
         .append("g")
-        .selectAll(".gameLevelRect")
-        .data( function(d,i) {return d;});
+        .classed("gameRow", true);
 
-        gameLevelRect.enter()
-            .append("rect")
-            .attr("class", "gameLevelRect")
-            .attr("x", function(d, i, j) { return i*squareSize; })
-            .attr("y", function(d, i, j) { return j*squareSize; })
-            .attr("width", squareSize+0.5)
-            .attr("height", squareSize+0.5)
-            .attr("style", function(d, i, j) {
-                var blue = (d == 0) ? 0 : 255;
-                return "fill:rgb(0,0, " + blue + ");";
-            });
-        gameLevelRect.exit().remove();
+    var pixelRect = rowG.selectAll(".gameLevelRect")
+        .data( function(d,i) {return d;})
+        .enter()
+        .append("rect");
 
-    rowG.exit().remove();
+    pixelRect
+        .attr("x", function(d, i, j) { return i*squareSize; })
+        .attr("y", function(d, i, j) { return j*squareSize; })
+        .attr("width", squareSize+0.5)
+        .attr("height", squareSize+0.5)
+        .attr("style", function(d, i, j) {
+            var blue = (d == 0) ? 0 : 255;
+            return "fill:rgb(0,0, " + blue + ");";
+        });
 }
 
 /**
