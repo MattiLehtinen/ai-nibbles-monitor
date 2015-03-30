@@ -46,7 +46,7 @@ socket.on('connect', function () {
         console.log(data);
 
         var winners = data.winners;
-        if(winners.length > 1)  {
+        if(winners.length != 1)  {
             console.log("TIE.");
             d3.select("#player1Winner").classed("hidden", false).text("TIE!");
             d3.select("#player2Winner").classed("hidden", false).text("TIE!");
